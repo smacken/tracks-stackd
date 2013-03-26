@@ -4,6 +4,7 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
+using ServiceStack.Logging;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.ServiceModel;
 using System;
@@ -63,6 +64,10 @@ namespace tracksStackd.Resorts
     public class ResortService : Service
     {
         public MongoCollection<Resort> Resorts { get { return AppHost.DB.GetCollection<Resort>("Resort"); } }
+        ILog log = LogManager.GetLogger(typeof(ResortService));
+        
+        // Injected option
+        //public ILog Log { get; set; }
         
         public Resort Get(Resort request)
         {
@@ -88,10 +93,9 @@ namespace tracksStackd.Resorts
 
         public object Post(Resort request)
         {
-            // check to ensure that a resort doesnt already exist
-            bool existingResort = Resorts.AsQueryable<Resort>()
+            bool resortExists = Resorts.AsQueryable<Resort>()
                                          .Any(r => r.Name == request.Name);
-            if (existingResort) throw new HttpError("The resort already exists.");
+            if (resortExists) throw new HttpError("The resort already exists.");
 
             var response = Resorts.Insert(request);
             var resort = response.Response.ToDto<Resort>();
@@ -152,6 +156,9 @@ namespace tracksStackd.Resorts
                 };
             }
             Resorts.Save(resort);
+
+            Redis.As<Resort>().UpdateListItem("resorts", resort, request);
+            
             return new ResortResponse { Result = request };
         }
 
@@ -163,12 +170,36 @@ namespace tracksStackd.Resorts
                                 select r).FirstOrDefault();
             if (resortRequest != null)
             {
+                Resorts.Remove(Query.EQ("Name", resortRequest.Name));
                 var cache = Redis.As<Resort>();
                 Redis.Remove("resort." + request.Name);
-                cache.Lists["resorts"].Remove(resortRequest);
+                var cachedResorts = cache.Lists["resorts"].Any(resort => resort.Name == request.Name);
+                if(cachedResorts) cache.Lists["resorts"].Remove(resortRequest);
             }
 
             return new ResortResponse { Result = request };
+        }
+
+        protected IEnumerable<T> FindAll
+            <T>(string key)
+        {
+            var cache = Redis.As<T>();
+            bool cacheExists = cache.Lists[key].Any();
+
+            if (cacheExists)
+            {
+                Redis.IncrementValue(string.Format("cache.count.{0}", key));
+                return cache.Lists[key].AsEnumerable<T>();
+            }
+
+            var results = Resorts.FindAllAs<T>();
+            
+            int cacheHitCount = Redis.Get<int>(string.Format("cache.count.{0}", key));
+            Redis.Set<int>(string.Format("cache.count.{0}", key), 0);
+            cache.Lists[key].AddRange(results);
+            cache.ExpireEntryIn(key, TimeSpan.FromHours(6));
+            
+            return results;
         }
 
         public object Get(ResortsRequest request)
@@ -178,10 +209,16 @@ namespace tracksStackd.Resorts
 
             if (resortCacheExists)
             {
+                Redis.IncrementValue("cache.count.resorts");
                 return cache.Lists["resorts"].AsEnumerable<Resort>();
             }
             
             var resorts = Resorts.FindAllAs<Resort>();
+
+            int cacheHitCount = Redis.Get<int>("cache.count.resorts");
+            Redis.Set<int>("cache.count.resorts", 0);
+            log.DebugFormat("Cache resorts hit count: {0}", cacheHitCount);
+
             cache.Lists["resorts"].AddRange(resorts);
             cache.ExpireEntryIn("resorts", TimeSpan.FromHours(6));
             return resorts;

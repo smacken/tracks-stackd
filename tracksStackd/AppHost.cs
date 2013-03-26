@@ -1,16 +1,20 @@
 ﻿using MongoDB.Driver;
 using ServiceStack.CacheAccess;
 using ServiceStack.CacheAccess.Providers;
+using ServiceStack.Logging;
+using ServiceStack.Logging.Log4Net;
 using ServiceStack.Redis;
 using ServiceStack.ServiceInterface.Admin;
+using ServiceStack.ServiceInterface.Validation;
 using ServiceStack.WebHost.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using tracksStackd.Resorts;
-using tracksStackd.Services;
+
 
 namespace tracksStackd
 {
@@ -28,11 +32,18 @@ namespace tracksStackd
                   .Add<Track>("/api/track/{Id}", "GET")
                   .Add<TracksRequest>("/api/resort/{ResortId}/tracks", "GET");
 
+            //LogManager.LogFactory = new Log4NetFactory(true);
+            LogManager.LogFactory = new ServiceStack.Logging.Support.Logging.ConsoleLogFactory();
+            
             //container.Register<ServiceStack.CacheAccess.ICacheClient>(new MemoryCacheClient());
             container.Register<IRedisClientsManager>(new PooledRedisClientManager("localhost"));
             container.Register<ServiceStack.CacheAccess.ICacheClient>(c =>(ICacheClient)c.Resolve<IRedisClientsManager>().GetCacheClient());
+            container.Register<ILog>(x => LogManager.GetLogger(GetType()));
 
             Plugins.Add(new RequestLogsFeature());
+            Plugins.Add(new ValidationFeature());
+
+            container.RegisterValidators(Assembly.GetCallingAssembly());
         }
 
         public virtual void InitDb()

@@ -32,23 +32,43 @@ namespace tracksStackd.Tests
             _appHost.Stop();
         }
 
-
         [Test]
-        public void Should_Add_Resort()
+        public void Should_Delete_Resort()
         {
-            var newResort = new Resorts.Resort{};
-            //newResort.Should(Be.Not.Null);
-            Assert.That(newResort != null);
+            var response = Path.Combine(_restBase, "api/resort?Name=Revelstoke").DeleteFromUrl();
+
+            Assert.That(response != string.Empty);
         }
+
+        //[Test]
+        //public void Should_Add_Resort()
+        //{
+        //    // arrange
+        //    var newResort = new Resorts.Resort
+        //    {
+        //        Name = "Revelstoke",
+        //        Region = "B.C.",
+        //        Country = "Canada"
+        //    };
+
+        //    //var deleteResponse = Path.Combine(_restBase, "api/resort").DeleteFromUrl();
+        //    //Assert.That(newResort != null);
+
+        //    // act
+        //    var response = Path.Combine(_restBase + "api/resort").PostToUrl(newResort);
+
+        //    // assert
+        //    Assert.That(response.GetResponseStatus().Value == System.Net.HttpStatusCode.Created);
+        //}
 
         [Test]
         public void Should_retrieve_resort_list()
         {
-            //var resorts = Path.Combine(_restBase, "api/resorts").GetJsonFromUrl().FromJson<List<Resorts.Resort>>();
-            var resorts = _restBase + "api/resorts"
-                                .GetJsonFromUrl()
-                                .FromJson<List<Resorts.Resort>>();
+            var resorts = Path.Combine(_restBase, "api/resorts").GetJsonFromUrl().FromJson<List<Resorts.Resort>>();
+            //var resorts = _restBase + "api/resorts".GetJsonFromUrl().FromJson<List<Resorts.Resort>>();
             Assert.That(resorts.Count() > 0);
         }
+            
+        
     }
 }

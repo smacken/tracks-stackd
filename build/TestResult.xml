@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" total="2" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-03-25" time="15:49:47">
+<test-results name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" total="2" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-03-26" time="11:27:41">
   <environment nunit-version="2.6.2.12296" clr-version="2.0.50727.5466" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\dev\tracks-stackd\build" machine-name="FEZZRIG" user="my" user-domain="FEZZRIG" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite type="Assembly" name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" executed="True" result="Success" success="True" time="2.578" asserts="0">
+  <test-suite type="Assembly" name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" executed="True" result="Success" success="True" time="2.955" asserts="0">
     <results>
-      <test-suite type="Namespace" name="tracksStackd" executed="True" result="Success" success="True" time="2.557" asserts="0">
+      <test-suite type="Namespace" name="tracksStackd" executed="True" result="Success" success="True" time="2.935" asserts="0">
         <results>
-          <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="2.557" asserts="0">
+          <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="2.934" asserts="0">
             <results>
-              <test-suite type="TestFixture" name="With_Resorts" executed="True" result="Success" success="True" time="2.555" asserts="0">
+              <test-suite type="TestFixture" name="With_Resorts" executed="True" result="Success" success="True" time="2.932" asserts="0">
                 <categories>
                   <category name="Integration" />
                 </categories>
                 <results>
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_Add_Resort" executed="True" result="Success" success="True" time="0.025" asserts="1" />
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_list" executed="True" result="Success" success="True" time="0.971" asserts="1" />
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_Delete_Resort" executed="True" result="Success" success="True" time="1.173" asserts="1" />
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_list" executed="True" result="Success" success="True" time="0.148" asserts="1" />
                 </results>
               </test-suite>
             </results>
