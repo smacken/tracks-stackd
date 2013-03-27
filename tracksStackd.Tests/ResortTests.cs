@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tracksStackd;
 using ServiceStack.Text;
+using tracksStackd.Resorts;
 
 namespace tracksStackd.Tests
 {
@@ -38,6 +39,26 @@ namespace tracksStackd.Tests
             var response = Path.Combine(_restBase, "api/resort?Name=Revelstoke").DeleteFromUrl();
 
             Assert.That(response != string.Empty);
+        }
+
+        [Test]
+        public void Should_retrieve_resort_by_name()
+        {
+            var response = Path.Combine(_restBase, "api/resort?Name=Cypress Mt")
+                               .GetJsonFromUrl()
+                               .FromJson<ResortResponse>();
+
+            Assert.That(response.Result.Name == "Cypress Mt");
+        }
+
+        [Test]
+        public void Should_retrieve_hypermedia_links_with_resort()
+        {
+            var response = Path.Combine(_restBase, "api/resort?Name=Cypress Mt")
+                               .GetJsonFromUrl()
+                               .FromJson<ResortResponse>();
+
+            Assert.That(response.Links.Count > 0);
         }
 
         //[Test]

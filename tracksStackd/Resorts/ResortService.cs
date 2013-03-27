@@ -5,6 +5,7 @@ using MongoDB.Driver.Linq;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
 using ServiceStack.Logging;
+using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.ServiceModel;
 using System;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace tracksStackd.Resorts
 {
-    public class Resort
+    public class Resort 
     {
         public ObjectId Id { get; set; }  
         public string Name { get; set; }
@@ -50,7 +51,7 @@ namespace tracksStackd.Resorts
         public string Name { get; set; }
     }
 
-    public class ResortResponse
+    public class ResortResponse : HypermediaResponse
     {
         public Resort Result { get; set; }
     }
@@ -69,13 +70,13 @@ namespace tracksStackd.Resorts
         // Injected option
         //public ILog Log { get; set; }
         
-        public Resort Get(Resort request)
+        public ResortResponse Get(Resort request)
         {
             var cache = base.Request.GetCacheClient();
             string cacheKey = string.Format("resort.{0}", request.Name);
             var cachedResult = cache.Get<Resort>(cacheKey);
 
-            if (cachedResult != null) return cachedResult;
+            if (cachedResult != null) return cachedResult.AsResortResponse(base.RequestContext);
 
             var response = from resort in Resorts.AsQueryable<Resort>()
                            where resort.Name == request.Name
@@ -87,8 +88,7 @@ namespace tracksStackd.Resorts
 
             cache.Add<Resort>(cacheKey, resortResponse, DateTime.Now.AddMinutes(60));
             
-            return resortResponse;
-            //return new ResortResponse { Result = resortResponse };
+            return resortResponse.AsResortResponse(base.RequestContext);
         }
 
         public object Post(Resort request)
@@ -222,6 +222,22 @@ namespace tracksStackd.Resorts
             cache.Lists["resorts"].AddRange(resorts);
             cache.ExpireEntryIn("resorts", TimeSpan.FromHours(6));
             return resorts;
+        }
+    }
+
+    public static class ResortExtensions
+    {
+        public static ResortResponse AsResortResponse(this Resort resort, IRequestContext requestContext)
+        {
+            return new ResortResponse
+            {
+                Result = resort,
+                ResponseStatus = new ResponseStatus { },
+                Links = new List<Link> { 
+                    new Link { Rel="Maps", Href=Path.Combine(requestContext.AbsoluteUri, resort.Id.ToString(), "/maps/")},
+                    new Link { Rel="Tracks", Href=Path.Combine(requestContext.AbsoluteUri, resort.Id.ToString(), "/tracks/")},
+                }
+            };
         }
     }
 }
