@@ -31,4 +31,11 @@ namespace tracksStackd
         public List<Link> Links { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
     }
+
+    public class HypermediaResponse<T> : IHasResponseStatus
+    {
+        public T Result { get; set; }
+        public List<Link> Links { get; set; }
+        public ResponseStatus ResponseStatus { get; set; }
+    }
 }

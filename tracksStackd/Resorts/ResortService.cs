@@ -56,11 +56,16 @@ namespace tracksStackd.Resorts
         public Resort Result { get; set; }
     }
 
+    // could also be
+    //public class ResortResponse : HypermediaResponse<Resort> { }
+
     public class ResortsResponse : IHasResponseStatus
     {
         public IEnumerable<Resort> Resorts { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
     }
+
+    
 
     public class ResortService : Service
     {
