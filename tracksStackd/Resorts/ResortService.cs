@@ -105,6 +105,9 @@ namespace tracksStackd.Resorts
             var response = Resorts.Insert(request);
             var resort = response.Response.ToDto<Resort>();
 
+            //var resort = Resorts.Insert(request)
+            //                    .Response.ToDto<Resort>();
+
             var cache = Redis.As<Resort>();
             cache.SetEntryIfNotExists("resort." + request.Name, resort);
             cache.Lists["resorts"].Add(resort);
@@ -224,9 +227,34 @@ namespace tracksStackd.Resorts
             Redis.Set<int>("cache.count.resorts", 0);
             log.DebugFormat("Cache resorts hit count: {0}", cacheHitCount);
 
+            cache.Lists["resorts"].Clear();
             cache.Lists["resorts"].AddRange(resorts);
             cache.ExpireEntryIn("resorts", TimeSpan.FromHours(6));
             return resorts;
+        }
+         
+        [QueryRequestFilter]
+        public QueryResponse<List<Resort>> GetWithQuery(ResortsRequest request)
+        {
+            var req = base.Request as RestQuery;
+
+            IQueryable<Resort> resorts;
+            if (req != null)
+            {
+                var sortBy = req.Sort;
+                resorts = Resorts.AsQueryable()
+                                 .Skip(req.PageNumber * req.PageSize)
+                                 .Take(req.PageSize);
+            }
+            else {
+                resorts = Resorts.FindAllAs<Resort>().ToDto<List<Resort>>().AsQueryable();
+            }
+            
+            return new QueryResponse<List<Resort>>
+            {
+                Results = resorts.ToList(),
+                ResponseStatus = new ResponseStatus()
+            };
         }
     }
 

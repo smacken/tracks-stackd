@@ -30,7 +30,10 @@ namespace tracksStackd
                   .Add<Resorts.Resort>("/api/resort", "GET,POST,PUT,DELETE")
                   .Add<Track>("/api/track", "GET,POST,PUT,DELETE")
                   .Add<Track>("/api/track/{Id}", "GET")
-                  .Add<TracksRequest>("/api/resort/{ResortId}/tracks", "GET");
+                  .Add<TracksRequest>("/api/resort/{ResortId}/tracks", "GET")
+                  .Add<MapRequest>("/api/resort/{ResortId}/maps", "GET")
+                  .Add<Map>("/api/map", "GET,POST,PUT,DELETE")
+                  .Add<Map>("/api/map/{Id}", "GET");
 
             //LogManager.LogFactory = new Log4NetFactory(true);
             LogManager.LogFactory = new ServiceStack.Logging.Support.Logging.ConsoleLogFactory();

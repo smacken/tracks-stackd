@@ -33,7 +33,7 @@ task Test -depends Compile, Clean -description "Run the project test cases"{
 
   foreach ($test in $testAssemblies)
   {
-      exec {nunit-console $test /nologo /nodots /labels}
+      exec { nunit-console $test /nologo /nodots /labels }
   }
 }
 
@@ -41,9 +41,9 @@ task integration-tests -depends compile -description "Runs the set of integratio
     declare-task "Integration tests"
 
     foreach ($test in $testAssemblies)
-  {
-      exec {nunit-console $test /include:Integration /nologo /nodots /labels}
-  }
+    {
+       exec { nunit-console $test /include:Integration /nologo /nodots /labels }
+    }
 }
 
 # Compile source code
@@ -51,7 +51,6 @@ task Compile -depends Clean -description "Compile the project source code"{
   declare-task "Compiling"
   msbuild /p:Configuration=$buildConfig /p:OutDir=$buildOutputDir /verbosity:minimal /consoleLoggerparameters:ErrorsOnly /nologo /m "..\$applicationName.sln"
   new-balloontip -tiptext "Build" -tiptitle "Compiling"
-  #$compileMessage
 }
 
 # Compile Source code
@@ -66,21 +65,21 @@ task CompileDebug -depends Clean {
 task Clean  -description "Clean the project"{ 
   declare-task $cleanMessage
   remove-item "$buildOutputDir\*.*"
-  #Write-today
 }
 
 # Deploy the project
 task Deploy -depends Test  -Description "Create a project deployment"{
-	msbuild /p:Configuration="Release" /p:OutDir=$buildOutputDir /verbosity:minimal /consoleLoggerparameters:ErrorsOnly /nologo /m "$applicationName.sln"
-	"Deploying"
+	declare-task "Deploying"
+    msbuild /p:Configuration="Release" /p:OutDir=$buildOutputDir /verbosity:minimal /consoleLoggerparameters:ErrorsOnly /nologo /m "$applicationName.sln"
 }
 
 task Run -depends Compile -description "Runs the tracks rest shell" {
+    declare-task "Running tracks Rest Api shell - http://localhost:1337/"
     & "$buildOutputDir\tracks.shell.exe"
 }
 
 task Client -description "build the client-side javascript." {
-
+    
     if((program-exist grunt)){
         grunt    
     }
@@ -99,9 +98,12 @@ task ? -Description "Helper to display task info" {
 	Write-Documentation
 	"psake compile - compile source code"
 	"psake compiledebug - compile source code with"
-	"psake clean"
-	"psake deploy"
-    "psake client"
-    "psake watch"
-    "psake run"
+    "psake test - runs tests again the compiled codebase"
+    "psake integration-tests - runs only integration test suite"
+	"psake clean - cleans the deployment folder of artifacts"
+	"psake deploy - deploys to allocated deployment folder"
+    "psake client - client-side minification, bundling etc"
+    "psake watch - watch for code changes. Runs the Test task"
+    "psake run - runs tracks rest api shell on localhost:1337"
+    "psake install-test - ensures test suite runners"
 }

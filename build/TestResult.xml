@@ -1,23 +1,70 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" total="4" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-03-27" time="15:59:08">
+<test-results name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" total="4" errors="0" failures="4" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-04-03" time="15:49:03">
   <environment nunit-version="2.6.2.12296" clr-version="2.0.50727.5466" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\dev\tracks-stackd\build" machine-name="FEZZRIG" user="my" user-domain="FEZZRIG" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite type="Assembly" name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" executed="True" result="Success" success="True" time="2.917" asserts="0">
+  <test-suite type="Assembly" name="C:\dev\tracks-stackd\Deploy\tracksStackd.Tests.dll" executed="True" result="Failure" success="False" time="2.653" asserts="0">
     <results>
-      <test-suite type="Namespace" name="tracksStackd" executed="True" result="Success" success="True" time="2.896" asserts="0">
+      <test-suite type="Namespace" name="tracksStackd" executed="True" result="Failure" success="False" time="2.631" asserts="0">
         <results>
-          <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="2.896" asserts="0">
+          <test-suite type="Namespace" name="Tests" executed="True" result="Failure" success="False" time="2.631" asserts="0">
             <results>
-              <test-suite type="TestFixture" name="With_Resorts" executed="True" result="Success" success="True" time="2.894" asserts="0">
+              <test-suite type="TestFixture" name="MapTests" executed="True" result="Inconclusive" success="False" time="0.010" asserts="0" />
+              <test-suite type="TestFixture" name="With_Resorts" executed="True" result="Error" success="False" time="2.611" asserts="0">
                 <categories>
                   <category name="Integration" />
                 </categories>
+                <failure>
+                  <message><![CDATA[SetUp : MongoDB.Driver.MongoConnectionException : Unable to connect to server localhost:27017: No connection could be made because the target machine actively refused it 127.0.0.1:27017.
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it 127.0.0.1:27017]]></message>
+                  <stack-trace><![CDATA[at MongoDB.Driver.Internal.DirectMongoServerProxy.Connect(TimeSpan timeout, ReadPreference readPreference) in C:\build\mongo-csharp-driver\Driver\Internal\DirectMongoServerProxy.cs:line 174
+at MongoDB.Driver.Internal.DirectMongoServerProxy.ChooseServerInstance(ReadPreference readPreference) in C:\build\mongo-csharp-driver\Driver\Internal\DirectMongoServerProxy.cs:line 115
+at MongoDB.Driver.MongoServer.AcquireConnection(MongoDatabase database, ReadPreference readPreference) in C:\build\mongo-csharp-driver\Driver\Core\MongoServer.cs:line 1058
+at MongoDB.Driver.MongoCursorEnumerator`1.AcquireConnection() in C:\build\mongo-csharp-driver\Driver\Core\MongoCursorEnumerator.cs:line 299
+at MongoDB.Driver.MongoCursorEnumerator`1.GetFirst() in C:\build\mongo-csharp-driver\Driver\Core\MongoCursorEnumerator.cs:line 312
+at MongoDB.Driver.MongoCursorEnumerator`1.MoveNext() in C:\build\mongo-csharp-driver\Driver\Core\MongoCursorEnumerator.cs:line 230
+at MongoDB.Driver.MongoDatabase.GetCollectionNames() in C:\build\mongo-csharp-driver\Driver\Core\MongoDatabase.cs:line 650
+at MongoDB.Driver.MongoDatabase.CollectionExists(String collectionName) in C:\build\mongo-csharp-driver\Driver\Core\MongoDatabase.cs:line 302
+at tracksStackd.AppHost.Ensure(String[] collections) in c:\dev\tracks-stackd\tracksStackd\AppHost.cs:line 73
+at tracksStackd.AppHost.InitDb() in c:\dev\tracks-stackd\tracksStackd\AppHost.cs:line 56
+at tracksStackd.Tests.With_Resorts.Pre_test() in c:\dev\tracks-stackd\tracksStackd.Tests\ResortTests.cs:line 26
+--SocketException
+at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+at System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+at System.Net.Sockets.TcpClient.Connect(IPEndPoint remoteEP)
+at MongoDB.Driver.Internal.MongoConnection.Open() in C:\build\mongo-csharp-driver\Driver\Internal\MongoConnection.cs:line 381
+at MongoDB.Driver.Internal.MongoConnection.SendMessage(MongoRequestMessage message, WriteConcern writeConcern, String databaseName) in C:\build\mongo-csharp-driver\Driver\Internal\MongoConnection.cs:line 567
+at MongoDB.Driver.Internal.MongoConnection.RunCommand(String databaseName, QueryFlags queryFlags, CommandDocument command, Boolean throwOnError) in C:\build\mongo-csharp-driver\Driver\Internal\MongoConnection.cs:line 431
+at MongoDB.Driver.MongoServerInstance.Ping(MongoConnection connection) in C:\build\mongo-csharp-driver\Driver\Core\MongoServerInstance.cs:line 695
+at MongoDB.Driver.MongoServerInstance.Connect() in C:\build\mongo-csharp-driver\Driver\Core\MongoServerInstance.cs:line 480
+at MongoDB.Driver.Internal.DirectMongoServerProxy.Connect(TimeSpan timeout, ReadPreference readPreference) in C:\build\mongo-csharp-driver\Driver\Internal\DirectMongoServerProxy.cs:line 149
+]]></stack-trace>
+                </failure>
                 <results>
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_Delete_Resort" executed="True" result="Success" success="True" time="1.144" asserts="1" />
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_hypermedia_links_with_resort" executed="True" result="Success" success="True" time="0.160" asserts="1" />
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_by_name" executed="True" result="Success" success="True" time="0.002" asserts="1" />
-                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_list" executed="True" result="Success" success="True" time="0.037" asserts="1" />
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_Delete_Resort" executed="True" result="Failure" success="False" time="0.000" asserts="0">
+                    <failure>
+                      <message><![CDATA[TestFixtureSetUp failed in With_Resorts]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_hypermedia_links_with_resort" executed="True" result="Failure" success="False" time="0.000" asserts="0">
+                    <failure>
+                      <message><![CDATA[TestFixtureSetUp failed in With_Resorts]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_by_name" executed="True" result="Failure" success="False" time="0.000" asserts="0">
+                    <failure>
+                      <message><![CDATA[TestFixtureSetUp failed in With_Resorts]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
+                  <test-case name="tracksStackd.Tests.With_Resorts.Should_retrieve_resort_list" executed="True" result="Failure" success="False" time="0.000" asserts="0">
+                    <failure>
+                      <message><![CDATA[TestFixtureSetUp failed in With_Resorts]]></message>
+                      <stack-trace />
+                    </failure>
+                  </test-case>
                 </results>
               </test-suite>
             </results>

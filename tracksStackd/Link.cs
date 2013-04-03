@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace tracksStackd
 {
+    /// <summary>
+    /// Hyperlink to another related api
+    /// </summary>
     public class Link
     {
         public string Rel { get; set; }

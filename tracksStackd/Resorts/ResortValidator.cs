@@ -20,6 +20,7 @@ namespace tracksStackd.Resorts
         public TrackValidator()
         {
             RuleFor(track => track.Name).NotEmpty();
+            
         }
     }
 }

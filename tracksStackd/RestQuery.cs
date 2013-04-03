@@ -18,6 +18,13 @@ namespace tracksStackd
         public List<Link> Links { get; set; }
     }
 
+    public class QueryResponse<T> : IHasResponseStatus
+    {
+        public T Results { get; set; }
+        public ResponseStatus ResponseStatus { get; set; }
+        public List<Link> Links { get; set; }
+    }
+
     public class QueryRequestFilterAttribute : Attribute, IHasRequestFilter
     {
         public IHasRequestFilter Copy()
